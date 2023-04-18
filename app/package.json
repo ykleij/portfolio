@@ -1,0 +1,18 @@
+{
+  "name": "minimalistic-portfolio",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^4.2.0"
+  },
+  "dependencies": {
+    "three": "^0.151.3",
+    "three-bmfont-text": "^2.3.0"
+  }
+}
