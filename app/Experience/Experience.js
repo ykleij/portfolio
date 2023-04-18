@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-global.THREE = THREE;
+// global.THREE = THREE;
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -55,11 +55,11 @@ export default class Experience {
     }
 
     addText() {
-        this.geometry = createGeometry({
+        this.geometry =createGeometry({
             text: "Hi, Yosef here.",
             font: font,
             align: 'center',
-            flipY: this.fontTexturex.flipY
+            flipY: this.fontTexture.flipY
         })
 
         this.materialText = new THREE.RawShaderMaterial(MSDFShader({
