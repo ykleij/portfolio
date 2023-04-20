@@ -1,4 +1,5 @@
-import * as THREE from 'three';
+
+console.log(global.THREE)
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -22,7 +23,6 @@ export default class Experience {
 
         Experience.instance = this;
 
-
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
@@ -33,8 +33,10 @@ export default class Experience {
         document.body.appendChild(this.renderer.domElement);
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.camera.position.z = 5;
 
-
+        this.time = 0;
+        this.isPlaying = true;
 
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -46,13 +48,9 @@ export default class Experience {
             console.log(this.fontTexture);
 
             this.addText();
-        })
 
-        this.camera.position.z = 5;
+            this.render();
 
-        this.animate();
-
-        window.addEventListener("resize", () => {
             this.resize();
         })
 
@@ -80,20 +78,22 @@ export default class Experience {
         this.scene.add(text)
     }
 
-    animate() {
+    render() {
+        if (!this.isPlaying) return;
+        this.time = 0.05;
+        // this.material.uniforms.time.value = this.time;
+        // requestAnimationFrame(this.render.bind(this))
         this.renderer.render(this.scene, this.camera);
-
-        window.requestAnimationFrame(() => {
-            this.animate();
-        });
     }
 
     resize() {
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        window.addEventListener("resize", () => {
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        this.camera.aspect = window.innerWidth / window.innerHeight;
-        this.camera.updateProjectionMatrix();
+            this.camera.aspect = window.innerWidth / window.innerHeight;
+            this.camera.updateProjectionMatrix();
+        })
     }
 
 }
