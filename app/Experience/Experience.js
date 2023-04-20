@@ -1,5 +1,5 @@
+import * as THREE from 'three';
 
-console.log(global.THREE)
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -7,12 +7,13 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import vertex from "./shader/vertex.glsl";
 
 // import gsap from "gsap";
+console.log(THREE.WebGLProgram)
 
 import createTextGeometry from 'three-bmfont-text';
 import createMSDFShader from 'three-bmfont-text/shaders/msdf.js';
 
-import font from '../public/assets/manifold.json';
-import fontTexture from '../public/assets/manifold.png';
+import font from './assets/manifold.json';
+import fontTexture from './assets/manifold.png';
 
 
 export default class Experience {
@@ -75,7 +76,30 @@ export default class Experience {
         text.scale.set(0.01, 0.01, 0.01);
         // text.position.set(0, -layout.descender + layout.height, 0)
         // text.scale.multiplyScalar(Math.random() * 0.5 + 0.5)
-        this.scene.add(text)
+        this.scene.add(text);
+    }
+
+    addObjects() {
+        let that = this;
+        this.material = new THREE.ShaderMaterial({
+            extensions: {
+                derivatives: "#extension GL_OES_standard_derivatives : enable"
+            },
+            side: THREE.DoubleSide,
+            uniforms: {
+                time: { value: 0 },
+                resolution: { value: new THREE.Vector4() },
+            },
+            // wirefame: true,
+            // transparent: true,
+            vertexShader: vertex,
+            fragmentShader: fragment
+        });
+
+        this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+
+        this.plane = new THREE.Mesh(this.geometry, this.material);
+        this.scene.add(this.plane);
     }
 
     render() {
