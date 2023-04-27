@@ -1,0 +1,6 @@
+﻿.parcel-cache
+node_modules/xxhash-wasm
+node_modules/xtend
+node_modules/msgpackr-extract/node_modules
+node_modules
+dist

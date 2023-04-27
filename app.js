@@ -28,11 +28,16 @@ export default class Sketch {
         document.getElementById("container").appendChild(this.renderer.domElement);
 
         this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
-        this.camera.position.z = 1;
+        this.camera.position.z = .18;
+
+        // this.light = new THREE.AmbientLight(0xffffff)
+        // this.light.position.z = 2;
+        // this.light.intensity = 10;
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
         this.scene = new THREE.Scene();
+        // this.scene.add(this.light)
 
 
         this.time = 0;
@@ -43,58 +48,55 @@ export default class Sketch {
         this.mouseEvents();
         this.render();
         this.onResize();
+        this.addPlane();
 
-        const geometry = new THREE.PlaneGeometry(1, 1);
-        this.planeMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide });
-        this.plane = new THREE.Mesh(geometry, this.planeMaterial);
-        this.plane.position.z = -1;
-        this.plane.scale.set(10, 10, 10)
-        this.scene.add(this.plane);
-            
         // this.mouseClick();
         this.mouseScroll();
+
+        // this.mesh.castShadow = true;
+        // this.plane.receiveShadow = true;
     }
 
     mouseEvents() {
         window.addEventListener('mousemove', (e) => {
             this.mouse = {
-                x: (e.clientX / window.innerWidth) ,
+                x: (e.clientX / window.innerWidth),
                 y: (e.clientY / window.innerHeight)
             }
 
-            if (this.material)this.material.uniforms.uMouse.value = new THREE.Vector2(this.mouse.x, this.mouse.y)
+            if (this.material) this.material.uniforms.uMouse.value = new THREE.Vector2(this.mouse.x, this.mouse.y)
 
-            let eMouseX =  (e.clientX / window.innerWidth) * 2 - 1;
-            let eMouseY =  -(e.clientY / window.innerHeight) * 2 + 1;
+            let eMouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            let eMouseY = -(e.clientY / window.innerHeight) * 2 + 1;
 
             if (this.mesh) {
-                this.mesh.rotation.x = eMouseY * .15;
-                this.mesh.rotation.y = eMouseX * .05;
-                this.mesh.position.x = eMouseX * .05;
-                this.mesh.position.y = eMouseY * .01;
+                // this.mesh.rotation.x = eMouseY * .15;
+                // this.mesh.position.y = eMouseY * .01;
+                this.mesh.rotation.y = eMouseX * .1;
+                this.mesh.position.x = eMouseX * .15;
             }
         });
     }
 
     mouseClick() {
         this.planeColors = [];
-        this.planeColors.push( "#FFFFFF", "#fff23f", "#000000")
+        this.planeColors.push("#FFFFFF", "#fff23f", "#000000")
 
         this.index = 0;
 
         window.addEventListener('click', (e) => {
             e.preventDefault();
-            
+
             this.index++;
             if (this.index >= this.planeColors.length) {
                 this.index = 0;
             }
             this.planeMaterial.color.set(this.planeColors[this.index]);
-            
-            
+
+
             this.s = 0.0045;
             // this.mesh.scale.set(this.s, -this.s, this.s)
-            this.material.uniforms.uColor.value = new THREE.Vector3(0.1,0.1,0.1);
+            this.material.uniforms.uColor.value = new THREE.Vector3(0.1, 0.1, 0.1);
 
 
         })
@@ -114,7 +116,8 @@ export default class Sketch {
             const geometry = new MSDFTextGeometry({
                 DoubleSide: THREE.DoubleSide,
                 flipY: true,
-                text: "Hi,\n Yosef here.".toUpperCase(),
+                text: "Yosef.".toUpperCase(),
+                // "Hi,\n Yosef here."
                 font: font,
                 align: 'center',
             });
@@ -132,7 +135,7 @@ export default class Sketch {
                     time: { type: 'f', value: 0 },
                     viewport: { type: 'v2', value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
                     uMouse: { type: 'v2', value: new THREE.Vector2(0, 0) },
-                    uColor: { type: 'v4', value: new THREE.Vector3(0.1,0.1,0.1)},
+                    uColor: { type: 'v4', value: new THREE.Vector3(0.1, 0.1, 0.1) },
                     // Common
                     ...uniforms.common,
 
@@ -154,8 +157,8 @@ export default class Sketch {
             this.mesh.scale.set(this.s, -this.s, this.s)
 
             geometry.computeBoundingBox();
-            const centerOffset = -0.46 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
-            geometry.translate(centerOffset, 40, 0);
+            const centerOffset = -0.40 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+            geometry.translate(centerOffset, 20, 0);
             // const layout = geometry.layout;
             // this.mesh.position.set(-0.005 * layout.width / 2, -0.005 * layout.height / 2, 0)
 
@@ -178,9 +181,27 @@ export default class Sketch {
                 const loader = new FontLoader();
                 loader.load(path, resolve);
             });
-        
+
             return promise;
         }
+    }
+
+    addPlane() {
+        const geometry = new THREE.PlaneGeometry(1, 1, 300, 300);
+        
+        this.planeMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0x36454F, 
+            side: THREE.DoubleSide,
+            wireframe: true
+        });
+
+        this.plane = new THREE.Mesh(geometry, this.planeMaterial);
+
+        this.plane.position.z = -1;
+        this.plane.scale.set(10, 10, 10);
+
+
+        this.scene.add(this.plane);
     }
 
     addMesh() {
@@ -203,8 +224,9 @@ export default class Sketch {
         this.time += 0.05;
 
         if (this.material) this.material.uniforms.time.value = this.time;
-        // this.mesh.rotation.x += 0.01;
-        // this.mesh.rotation.y += 0.01;
+
+        // if (this.mesh) this.mesh.position.x = this.mesh.position.x + 0.8 * Math.sin(0.1 * this.time) * 0.00005
+        if (this.mesh) this.mesh.position.y = this.mesh.position.y + 1 * Math.sin(0.1 * this.time) * 0.00005
 
         this.renderer.render(this.scene, this.camera)
 

@@ -22,8 +22,11 @@ body {
     right: calc(5.5vh + 0.5rem);
     z-index: 300;
     cursor: pointer;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .logo {
@@ -34,4 +37,13 @@ body {
     cursor: pointer;
     user-select: none;
     font-weight: 600;
+    font-size: 20px;
+    color: white;
+}
+
+.menu-line {
+    height: 2px;
+    width: 1.5vw;
+    /* color: white; */
+    background-color: white;
 }

@@ -86,7 +86,7 @@
                     vec4 filledFragColor = vec4(uColor, uOpacity * alpha);
 
                     // gradient
-                    float grgr = fract(1.*gr + time*.2);
+                    float grgr = fract(1.*gr + time*.02);
                     float start = smoothstep(0.,0.01,grgr);
                     float end = smoothstep(lineProgress,lineProgress -0.01,grgr);
                     float mask = start*end;
@@ -99,9 +99,9 @@
                     gl_FragColor = vec4(uColor.xyz, filledFragColor * uOpacity);
                     gl_FragColor = vec4(uColor.xyz, finalAlpha);
                     // gl_FragColor = vec4(vec3(border),1.);
-                    gl_FragColor = vec4(vec3(.8,.8,.8),mask); 
-                    gl_FragColor = vec4(vec3(.8,.8,.8),finalAlpha); 
-                    gl_FragColor = vec4(vec3(.8,.8,.8),alpha); 
-                    // gl_FragColor = vec4(vec3(circle,.2,.2),finalAlpha);
+                    // gl_FragColor = vec4(vec3(.1,.1,.1),border); 
+                    // gl_FragColor = vec4(vec3(.8,.8,.8),finalAlpha); 
+                    gl_FragColor = vec4(vec3(10.,10.,10.),alpha); 
+                    gl_FragColor = vec4(vec3(circle,.2,.2),finalAlpha);
                     if (gl_FragColor.a < 0.001) discard;
                 }
