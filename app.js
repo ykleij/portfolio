@@ -9,6 +9,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 import fragment from './shaders/fragment.glsl'
 import vertex from './shaders/vertex.glsl'
+import fragmentPlane from './shaders/fragmentPlane.glsl'
+import vertexPlane from './shaders/vertexPlane.glsl'
 import gradient from './assets/gradient.png'
 
 // import gsap from "gsap";
@@ -41,7 +43,7 @@ export default class Sketch {
 
 
         this.time = 0;
-        this.mouse = { x: 0, y: 0 }
+        this.mouse = { x: 0, y: 0 };
 
 
         this.addText();
@@ -104,7 +106,7 @@ export default class Sketch {
 
     mouseScroll() {
         window.addEventListener('scroll', () => {
-            console.log("sscorollign")
+            console.log("scrolling")
         })
     }
 
@@ -188,17 +190,22 @@ export default class Sketch {
 
     addPlane() {
         const geometry = new THREE.PlaneGeometry(1, 1, 300, 300);
-        
-        this.planeMaterial = new THREE.MeshBasicMaterial({ 
-            color: 0x36454F, 
+        this.planeMaterial = new THREE.ShaderMaterial({ 
+            vertexShader: vertexPlane,
+            fragmentShader: fragmentPlane,
+            uniforms: {
+                vColor: { type: "vec3", value: (0.)},
+                time: { type: "f", value: 0},
+        },
             side: THREE.DoubleSide,
-            wireframe: true
+            wireframe: true,
         });
 
         this.plane = new THREE.Mesh(geometry, this.planeMaterial);
 
         this.plane.position.z = -1;
         this.plane.scale.set(10, 10, 10);
+        this.plane.rotation.z = 10;
 
 
         this.scene.add(this.plane);
@@ -224,6 +231,7 @@ export default class Sketch {
         this.time += 0.05;
 
         if (this.material) this.material.uniforms.time.value = this.time;
+        if (this.planeMaterial) this.planeMaterial.uniforms.time.value = this.time;
 
         // if (this.mesh) this.mesh.position.x = this.mesh.position.x + 0.8 * Math.sin(0.1 * this.time) * 0.00005
         if (this.mesh) this.mesh.position.y = this.mesh.position.y + 1 * Math.sin(0.1 * this.time) * 0.00005

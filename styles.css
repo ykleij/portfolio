@@ -29,6 +29,15 @@ body {
     justify-content: space-between;
 }
 
+.menu-line {
+    height: 2px;
+    width: 1.5vw;
+    /* color: white; */
+    background-color: white;
+    transition: all 1s ease;
+    cursor: pointer;
+}
+
 .logo {
     position: absolute;
     top: calc(5.5vh + 0.5rem);
@@ -41,9 +50,3 @@ body {
     color: white;
 }
 
-.menu-line {
-    height: 2px;
-    width: 1.5vw;
-    /* color: white; */
-    background-color: white;
-}

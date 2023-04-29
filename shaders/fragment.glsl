@@ -102,6 +102,6 @@
                     // gl_FragColor = vec4(vec3(.1,.1,.1),border); 
                     // gl_FragColor = vec4(vec3(.8,.8,.8),finalAlpha); 
                     gl_FragColor = vec4(vec3(10.,10.,10.),alpha); 
-                    gl_FragColor = vec4(vec3(circle,.2,.2),finalAlpha);
+                    // gl_FragColor = vec4(vec3(circle,.2,.2),finalAlpha);
                     if (gl_FragColor.a < 0.001) discard;
                 }
