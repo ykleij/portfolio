@@ -30,7 +30,7 @@ export default class Sketch {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById("container").appendChild(this.renderer.domElement);
 
-        this.camera = new THREE.PerspectiveCamera(150, window.innerWidth / window.innerHeight, 0.01, 10);
+        this.camera = new THREE.PerspectiveCamera(110, window.innerWidth / window.innerHeight, 0.01, 10);
         this.camera.position.z = .3;
 
         // this.light = new THREE.AmbientLight(0xffffff)
@@ -48,7 +48,6 @@ export default class Sketch {
 
 
         this.addText();
-        this.mouseEvents();
         this.render();
         this.onResize();
         this.addPlane();
@@ -76,8 +75,8 @@ export default class Sketch {
             if (this.mesh) {
                 // this.mesh.rotation.x = eMouseY * .15;
                 // this.mesh.position.y = eMouseY * .01;
-                this.mesh.rotation.y = eMouseX * .1;
-                this.mesh.position.x = eMouseX * .1;
+                this.mesh.rotation.y = eMouseX * .01;
+                this.mesh.position.x = eMouseX * .01;
             }
         });
     }
@@ -86,13 +85,14 @@ export default class Sketch {
         const diff = 75 - this.camera.fov;
 
         if (Math.abs(diff) < 1) {
+            this.mouseEvents();
             return;
         }
 
-        this.camera.fov -= .3; 
+        this.camera.fov -= .2;
         this.camera.updateProjectionMatrix();
 
-        window.requestAnimationFrame(this.fovAnimation.bind(this));       
+        window.requestAnimationFrame(this.fovAnimation.bind(this));
     }
 
     mouseClick() {
@@ -205,13 +205,13 @@ export default class Sketch {
 
     addPlane() {
         const geometry = new THREE.PlaneGeometry(1, 1, 300, 300);
-        this.planeMaterial = new THREE.ShaderMaterial({ 
+        this.planeMaterial = new THREE.ShaderMaterial({
             vertexShader: vertexPlane,
             fragmentShader: fragmentPlane,
             uniforms: {
-                vColor: { type: "vec3", value: (0.)},
-                time: { type: "f", value: 0},
-        },
+                vColor: { type: "vec3", value: (0.) },
+                time: { type: "f", value: 0 },
+            },
             side: THREE.DoubleSide,
             // wireframe: true,
         });
@@ -251,10 +251,10 @@ export default class Sketch {
         // if (this.mesh) this.mesh.position.x = this.mesh.position.x + 0.8 * Math.sin(0.1 * this.time) * 0.00005
         if (this.mesh) this.mesh.position.y = this.mesh.position.y + 1 * Math.sin(0.2 * this.time) * 0.0001
 
-        
+
         this.renderer.render(this.scene, this.camera)
-        
-        window.requestAnimationFrame(this.render.bind(this));        
+
+        window.requestAnimationFrame(this.render.bind(this));
     }
 
     onResize() {
