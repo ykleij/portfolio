@@ -11,7 +11,6 @@ import fragment from './shaders/fragment.glsl'
 import vertex from './shaders/vertex.glsl'
 import fragmentPlane from './shaders/fragmentPlane.glsl'
 import vertexPlane from './shaders/vertexPlane.glsl'
-import gradient from './assets/gradient.png'
 
 // import gsap from "gsap";
 
@@ -21,6 +20,8 @@ import gradient from './assets/gradient.png'
 
 import font from './assets/manifold.json';
 import fontTexture from './assets/manifold.png';
+import gradient from './assets/gradient.png'
+
 
 export default class Sketch {
     constructor() {
@@ -29,14 +30,14 @@ export default class Sketch {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById("container").appendChild(this.renderer.domElement);
 
-        this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);
-        this.camera.position.z = .18;
+        this.camera = new THREE.PerspectiveCamera(150, window.innerWidth / window.innerHeight, 0.01, 10);
+        this.camera.position.z = .3;
 
         // this.light = new THREE.AmbientLight(0xffffff)
         // this.light.position.z = 2;
         // this.light.intensity = 10;
 
-        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
         this.scene = new THREE.Scene();
         // this.scene.add(this.light)
@@ -51,6 +52,7 @@ export default class Sketch {
         this.render();
         this.onResize();
         this.addPlane();
+        this.fovAnimation();
 
         // this.mouseClick();
         this.mouseScroll();
@@ -75,9 +77,22 @@ export default class Sketch {
                 // this.mesh.rotation.x = eMouseY * .15;
                 // this.mesh.position.y = eMouseY * .01;
                 this.mesh.rotation.y = eMouseX * .1;
-                this.mesh.position.x = eMouseX * .15;
+                this.mesh.position.x = eMouseX * .1;
             }
         });
+    }
+
+    fovAnimation() {
+        const diff = 75 - this.camera.fov;
+
+        if (Math.abs(diff) < 1) {
+            return;
+        }
+
+        this.camera.fov -= .3; 
+        this.camera.updateProjectionMatrix();
+
+        window.requestAnimationFrame(this.fovAnimation.bind(this));       
     }
 
     mouseClick() {
@@ -198,7 +213,7 @@ export default class Sketch {
                 time: { type: "f", value: 0},
         },
             side: THREE.DoubleSide,
-            wireframe: true,
+            // wireframe: true,
         });
 
         this.plane = new THREE.Mesh(geometry, this.planeMaterial);
@@ -234,11 +249,12 @@ export default class Sketch {
         if (this.planeMaterial) this.planeMaterial.uniforms.time.value = this.time;
 
         // if (this.mesh) this.mesh.position.x = this.mesh.position.x + 0.8 * Math.sin(0.1 * this.time) * 0.00005
-        if (this.mesh) this.mesh.position.y = this.mesh.position.y + 1 * Math.sin(0.1 * this.time) * 0.00005
+        if (this.mesh) this.mesh.position.y = this.mesh.position.y + 1 * Math.sin(0.2 * this.time) * 0.0001
 
+        
         this.renderer.render(this.scene, this.camera)
-
-        window.requestAnimationFrame(this.render.bind(this));
+        
+        window.requestAnimationFrame(this.render.bind(this));        
     }
 
     onResize() {
