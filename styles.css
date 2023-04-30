@@ -23,7 +23,7 @@ body {
     z-index: 300;
     cursor: pointer;
     width: 30px;
-    height: 18px;
+    height: 15px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -31,8 +31,6 @@ body {
 
 .menu-line {
     height: 2px;
-    width: 1.5vw;
-    /* color: white; */
     background-color: white;
     transition: all 1s ease;
     cursor: pointer;
