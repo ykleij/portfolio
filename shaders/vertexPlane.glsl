@@ -88,9 +88,9 @@ void main() {
   float offset = incline*mix(-.25,.25,uv.y);
 
   float noise = snoise(vec3(noiseCoord.x + time * .03, noiseCoord.y, time * 0.03));
-  // noise = max(0.,noise);
+  noise = max(0.1,noise);
 
-  vec3 color1 = vec3(0.2,0.2,0.2);
+  vec3 color1 = vec3(0,0,0);
   vec3 color2 = vec3(.5,.5,.5);
 
   vColor = mix(color1, color2, noise);

@@ -23,7 +23,7 @@
                 }
 
                 float createCircle () {
-                    vec2 viewportUv = vUv * 2.0 - 1.0;
+                    vec2 viewportUv = vUv;
                     float viewportAspect = viewport.x / viewport.y;
 
                     vec2 mousePoint = vec2(uMouse.x, 1.0 - uMouse.y);
@@ -35,6 +35,8 @@
                     
                     float dist = distance(shapeUv, mousePoint);
                     dist = smoothstep(circleRadius, circleRadius + 0.001, dist);
+
+                    // return uMouse;
                     return dist;
                 }
         
@@ -88,11 +90,13 @@
                     // gradient
                     float grgr = fract(1.*gr + time*.02);
                     float start = smoothstep(0.,0.01,grgr);
-                    float end = smoothstep(lineProgress,lineProgress -0.01,grgr);
+                    float end = smoothstep(lineProgress,lineProgress - 0.01,grgr);
                     float mask = start*end;
                     mask = max(.1, mask);
                     
                     float finalAlpha = border * mask;
+
+                    float finalIdk = circle + finalAlpha;
         
 
                     // gl_FragColor = filledFragColor;
@@ -101,7 +105,7 @@
                     // gl_FragColor = vec4(vec3(border),1.);
                     // gl_FragColor = vec4(vec3(.1,.1,.1),border); 
                     // gl_FragColor = vec4(vec3(.8,.8,.8),finalAlpha); 
-                    gl_FragColor = vec4(vec3(10.,10.,10.),alpha); 
-                    // gl_FragColor = vec4(vec3(circle,.2,.2),finalAlpha);
+                    gl_FragColor = vec4(vec3(circle,10.,10.),alpha); 
+                    gl_FragColor = vec4(vec3(1.,1.,1.),finalIdk * alpha);
                     if (gl_FragColor.a < 0.001) discard;
                 }

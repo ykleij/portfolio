@@ -1,5 +1,6 @@
 import { MSDFTextGeometry, MSDFTextMaterial, uniforms } from "three-msdf-text-utils";
-import { FontLoader } from './FontLoader.js';
+// import { FontLoader } from './FontLoader.js';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 
 import * as THREE from 'three';
 
@@ -17,11 +18,9 @@ import vertexPlane from './shaders/vertexPlane.glsl'
 // var createGeometry = require('three-bmfont-text');
 // var MSDFShader = require('./msdf.js');
 
-
 import font from './assets/manifold.json';
 import fontTexture from './assets/manifold.png';
 import gradient from './assets/gradient.png'
-
 
 export default class Sketch {
     constructor() {
@@ -37,21 +36,21 @@ export default class Sketch {
         // this.light.position.z = 2;
         // this.light.intensity = 10;
 
-        // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
         this.scene = new THREE.Scene();
         // this.scene.add(this.light)
 
-
         this.time = 0;
         this.mouse = { x: 0, y: 0 };
-
 
         this.addText();
         this.render();
         this.onResize();
         this.addPlane();
-        this.fovAnimation();
+
+        this.speed = .2;
+        this.startAnimation();
 
         // this.mouseClick();
         this.mouseScroll();
@@ -81,18 +80,23 @@ export default class Sketch {
         });
     }
 
-    fovAnimation() {
-        const diff = 75 - this.camera.fov;
+    startAnimation() {
+        const diff = 90 - this.camera.fov;
 
-        if (Math.abs(diff) < 1) {
+        if (Math.abs(diff) < 3) {
             this.mouseEvents();
             return;
+        } 
+
+        if (Math.abs(diff) < 5) {
+            this.speed -= .008;
         }
 
-        this.camera.fov -= .2;
+        this.camera.fov -= this.speed;
+
         this.camera.updateProjectionMatrix();
 
-        window.requestAnimationFrame(this.fovAnimation.bind(this));
+        window.requestAnimationFrame(this.startAnimation.bind(this));
     }
 
     mouseClick() {
@@ -114,8 +118,6 @@ export default class Sketch {
             this.s = 0.0045;
             // this.mesh.scale.set(this.s, -this.s, this.s)
             this.material.uniforms.uColor.value = new THREE.Vector3(0.1, 0.1, 0.1);
-
-
         })
     }
 
@@ -133,7 +135,7 @@ export default class Sketch {
             const geometry = new MSDFTextGeometry({
                 DoubleSide: THREE.DoubleSide,
                 flipY: true,
-                text: "Yosef.".toUpperCase(),
+                text: "4mn7e.".toUpperCase(),
                 // "Hi,\n Yosef here."
                 font: font,
                 align: 'center',
@@ -180,7 +182,6 @@ export default class Sketch {
             // this.mesh.position.set(-0.005 * layout.width / 2, -0.005 * layout.height / 2, 0)
 
             this.scene.add(this.mesh)
-
         });
 
 
@@ -249,10 +250,10 @@ export default class Sketch {
         if (this.planeMaterial) this.planeMaterial.uniforms.time.value = this.time;
 
         // if (this.mesh) this.mesh.position.x = this.mesh.position.x + 0.8 * Math.sin(0.1 * this.time) * 0.00005
-        if (this.mesh) this.mesh.position.y = this.mesh.position.y + 1 * Math.sin(0.2 * this.time) * 0.0001
+        if (this.mesh) this.mesh.position.y += 1 * Math.sin(0.2 * this.time) * 0.0001
+        if (this.camera) this.camera.position.z += 1 * Math.sin(0.2 * this.time) * 0.00005
 
-
-        this.renderer.render(this.scene, this.camera)
+            this.renderer.render(this.scene, this.camera)
 
         window.requestAnimationFrame(this.render.bind(this));
     }
